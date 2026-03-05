@@ -23020,8 +23020,8 @@
 					  // call goo.gl URL shortener
 					  //
 					  // to test this API from command-line, first disable the IP restriction on API credentials, then run:
-					  // curl https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyCIjtNqfABbRilub1a3Ta7-qKF3bS9_p1M -H 'Content-Type: application/json' -d '{"longUrl": "http://www.google.com/"}'
-					  $.ajax('https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyCIjtNqfABbRilub1a3Ta7-qKF3bS9_p1M',
+					  // curl https://www.googleapis.com/urlshortener/v1/url?key=REDACTED_GOOGLE_API_KEY -H 'Content-Type: application/json' -d '{"longUrl": "http://www.google.com/"}'
+					  $.ajax('https://www.googleapis.com/urlshortener/v1/url?key=REDACTED_GOOGLE_API_KEY',
 							 {type: 'POST',
 							 contentType: 'application/json',
 							 data: JSON.stringify({longUrl: urlStr}), // encode as a string first! #tricky
