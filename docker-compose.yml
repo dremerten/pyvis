@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: python3-code-vis:latest
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+      - HOST=0.0.0.0
+      - APP_LOCATION=container
+    command: ["python", "v5-unity/bottle_server.py"]

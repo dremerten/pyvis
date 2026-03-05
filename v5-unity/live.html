@@ -1,0 +1,122 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!--
+  Python code-vis: https://github.com/pgbovine/OnlinePythoncode-vis/
+  Copyright (C) Andre Merten (andre@python-code-vis.com)
+  LICENSE: https://github.com/pgbovine/OnlinePythoncode-vis/blob/master/LICENSE.txt
+-->
+
+<!-- OPT live programming prototype started on 2016-05-30 -->
+
+<head>
+  <title>Live Programming Mode - Python3 Code Helper</title>
+  <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" type="text/css" href="css/modern-shell.css" />
+
+  <!-- let Webpack take care of everything. Use the [hash] feature to
+       create unique filenames for releases:
+       https://webpack.github.io/docs/long-term-caching.html -->
+  <script type="text/javascript" src="build/opt-live.bundle.js?bba84e7ab2" charset="utf-8"></script>
+
+  <!-- insert google-analytics.txt contents here -->
+
+</head>
+
+<body class="modern">
+
+  <header class="app-header">
+    <div class="brand">
+      <span class="pill">Live</span>
+      Python3 Code Helper
+    </div>
+    <div class="nav-actions">
+      <a href="visualize.html">Visualizer</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow-modern">Pair + debug together</div>
+    <h1>Share executions in real time.</h1>
+    <p>Invite others to your session, watch the same trace, and chat without losing context.</p>
+  </section>
+
+  <main class="shell">
+    <section class="panel">
+      <div class="controls-bar">
+        <div class="badge">Runtime</div>
+        <div id="codeInputWarnings">Write code in
+          <select id="pythonVersionSelector">
+            <option value="2">Python 2.7</option>
+            <option value="3" selected>Python 3.14</option>
+            <option value="js">JavaScript (ES2024)</option>
+          </select>
+        </div>
+        <span id="liveModeExtraWarning" class="pill">(drag lower right corner to resize code editor)</span>
+      </div>
+
+      <div id="someoneIsTypingDiv" style="color: #e93f34; font-weight: bold; display: none;">Someone is typing ...</div>
+
+      <div id="codeInputPane"></div>
+      <div id="legendDiv"></div>
+      <div id="executionSlider" style="margin-top: 10px;"></div>
+
+      <div id="vcrControls" style="display: none;">
+        <button id="jmpFirstInstr" , type="button">&lt;&lt; First</button>
+        <button id="jmpStepBack" , type="button">&lt; Back</button>
+        <span id="curInstr"></span>
+        <button id="jmpStepFwd" , type="button">Forward &gt;</button>
+        <button id="jmpLastInstr" , type="button">Last &gt;&gt;</button>
+      </div>
+
+      <div id="rawUserInputDiv" style="display: none;">
+        <span id="userInputPromptStr"></span>
+        <input type="text" id="raw_input_textbox" size="30" />
+        <button id="raw_input_submit_btn">Submit</button>
+      </div>
+
+      <div id="frontendErrorOutput"></div>
+      <div id="eurekaSurveyPane"></div>
+    </section>
+
+    <section class="panel">
+      <div class="badge">Shared Trace</div>
+      <div id="pyOutputPane"></div>
+
+      <div class="stat-bar" style="margin-top:14px;">
+        <div class="stat"><strong>Sync</strong>Stay aligned while stepping.</div>
+        <div class="stat"><strong>Chat</strong>Inline collaboration without context switching.</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer">
+
+    <div id="optionsPane">
+      <select id="cumulativeModeSelector">
+        <option value="false">hide exited frames [default]</option>
+        <option value="true">show exited frames (Python)</option>
+        <!-- <option value="holistic">holistic mode (experimental)</option> -->
+      </select>
+      <select id="heapPrimitivesSelector">
+        <option value="false">inline primitives and try to nest objects</option>
+        <option value="nevernest" selected>inline primitives but don't nest objects [default]</option>
+        <option value="true">render all objects on the heap (Python)</option>
+      </select>
+      <select id="textualMemoryLabelsSelector">
+        <option value="false">draw pointers as arrows [default]</option>
+        <option value="true">use text labels for pointers</option>
+      </select>
+    </div>
+
+    <p>
+      <button id="genUrlBtn" class="smallBtn" type="button">Generate permanent link</button> <input type="text"
+        id="urlOutput" size="70" />
+    </p>
+
+  </div>
+
+</body>
+
+</html>

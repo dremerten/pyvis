@@ -1,0 +1,17 @@
+.git
+.gitignore
+node_modules
+v5-unity/node_modules
+v1-v2
+v3
+v4-cokapi
+v5-unity/tests
+tests
+npm-debug.log
+Dockerfile
+docker-compose.yml
+__pycache__
+*.pyc
+*.pyo
+*.swp
+dist

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Python3 Code Helper - Visualize execution</title>
+
+  <meta http-equiv="Content-type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" type="text/css" href="css/modern-shell.css" />
+  <script type="text/javascript" src="build/visualize.bundle.js?v=dev2" charset="utf-8"></script>
+  <script>
+    // Temporary diagnostic: surface JS errors into the DOM so we can read them in headless dumps.
+    window.addEventListener('error', function (e) {
+      var box = document.getElementById('jsErrorLog');
+      if (!box) {
+        box = document.createElement('pre');
+        box.id = 'jsErrorLog';
+        box.style.color = '#f43f5e';
+        box.style.background = 'rgba(255,255,255,0.08)';
+        box.style.padding = '12px';
+        box.style.borderRadius = '12px';
+        box.style.fontFamily = 'monospace';
+        document.body.prepend(box);
+      }
+      box.textContent = 'JS Error: ' + e.message + ' @ ' + (e.filename || '') + ':' + (e.lineno || '');
+    });
+  </script>
+
+</head>
+
+<body class="modern">
+  <header class="app-header">
+    <div class="brand">
+      <span class="pill">PY</span>
+      Python3 Code Helper
+    </div>
+    <div class="nav-actions">
+      <a href="live.html">Live Mode</a>
+      <button id="themeToggle" class="smallBtn" type="button">Dark mode</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow-modern">Visualize every step</div>
+    <h1>Understand Python as it executes.</h1>
+    <p>Paste code, pick Python 3.14, and step through the trace without hunting for controls.</p>
+  </section>
+
+  <main class="shell">
+    <section class="panel panel-runtime">
+      <div class="panel-header controls-bar">
+        <div class="badge">Runtime</div>
+        <div id="codeInputWarnings">Write code in
+          <select id="pythonVersionSelector">
+            <option value="3" selected>Python 3.14</option>
+          </select>
+        </div>
+        <div style="flex:1"></div>
+        <div class="trace-controls">
+          <button id="executeBtn" class="bigBtn" type="button" style="max-width:220px;">Run & Visualize</button>
+          <button id="stepBackBtn" class="smallBtn" type="button">Step Back</button>
+          <button id="stepFwdBtn" class="smallBtn" type="button">Step Forward</button>
+        </div>
+      </div>
+
+      <div id="codeInputPane"></div>
+      <textarea id="codeFallback" placeholder="Type or paste Python code…" spellcheck="false"></textarea>
+      <div id="frontendErrorOutput"></div>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const map = [
+            ['stepBackBtn', 'jmpStepBack'],
+            ['stepFwdBtn', 'jmpStepFwd']
+          ];
+          map.forEach(([triggerId, targetId]) => {
+            const trigger = document.getElementById(triggerId);
+            if (!trigger) return;
+            trigger.addEventListener('click', () => {
+              const target = document.getElementById(targetId);
+              if (target) target.click();
+            });
+          });
+        });
+      </script>
+    </section>
+
+    <section class="panel panel-trace">
+      <div class="panel-header">
+        <div class="badge">Trace</div>
+        <div class="trace-subtitle">Step through execution, variables, and output side-by-side.</div>
+      </div>
+      <div id="pyOutputPane"></div>
+    </section>
+  </main>
+
+  <div id="chat_div"></div>
+
+  <script>
+    // Safety fallback: if the main frontend didn't initialize, start it manually.
+    window.addEventListener('load', function () {
+      if (!window.optFrontend && window.OptFrontendWithTestcases) {
+        try {
+          window.optFrontend = new window.OptFrontendWithTestcases({});
+        } catch (err) {
+          const box = document.getElementById('jsErrorLog');
+          if (box) box.textContent = 'Init error: ' + err.message;
+        }
+      }
+
+      // If Ace editor didn't attach, create a minimal editor and hide the fallback textarea.
+      setTimeout(function () {
+        var pane = document.getElementById('codeInputPane');
+        var fallback = document.getElementById('codeFallback');
+        if (pane && !pane.classList.contains('ace_editor') && window.ace) {
+          var ed = window.ace.edit('codeInputPane');
+          ed.setTheme((document.documentElement.dataset.theme === 'dark') ? 'ace/theme/monokai' : 'ace/theme/textmate');
+          ed.session.setMode('ace/mode/python');
+          ed.setOptions({ minLines: 18, maxLines: 60, fontSize: '14px' });
+          if (fallback && fallback.value.trim()) ed.setValue(fallback.value, -1);
+          if (fallback) fallback.style.display = 'none';
+          if (pane) pane.style.display = 'block';
+        } else if (fallback) {
+          fallback.style.display = 'block';
+          if (pane) pane.style.display = 'none';
+        }
+      }, 500);
+    });
+
+    (function () {
+      var root = document.documentElement;
+      var toggleBtn = document.getElementById('themeToggle');
+      var stored = localStorage.getItem('pycv-theme');
+      var current = stored || 'light';
+      root.dataset.theme = current;
+      if (toggleBtn) toggleBtn.textContent = current === 'dark' ? 'Light mode' : 'Dark mode';
+
+      function applyAceTheme() {
+        if (window.optFrontend && window.optFrontend.pyInputAceEditor) {
+          var theme = (root.dataset.theme === 'dark') ? 'ace/theme/monokai' : 'ace/theme/textmate';
+          window.optFrontend.pyInputAceEditor.setTheme(theme);
+        }
+      }
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function () {
+          var next = (root.dataset.theme === 'dark') ? 'light' : 'dark';
+          root.dataset.theme = next;
+          localStorage.setItem('pycv-theme', next);
+          toggleBtn.textContent = next === 'dark' ? 'Light mode' : 'Dark mode';
+          applyAceTheme();
+        });
+      }
+      applyAceTheme();
+    })();
+  </script>
+</body>
+
+</html>

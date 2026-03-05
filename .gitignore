@@ -1,0 +1,11 @@
+*.out
+*.out_py3
+*.out_py36
+*.pyc
+*.pyo
+v4-cokapi/feedback/cokapi-feedback.db
+coding-the-matrix/
+node_modules/
+google-analytics.txt
+webfaction-deploy.sh
+.trivy-scan.sh

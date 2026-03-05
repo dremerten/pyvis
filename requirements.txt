@@ -1,0 +1,4 @@
+bottle==0.12.25
+gunicorn==22.0.0
+legacy-cgi==2.6
+pip==26.0
